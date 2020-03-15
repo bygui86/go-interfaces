@@ -6,8 +6,6 @@ import (
 	"github.com/bygui86/go-interfaces/no_interface"
 )
 
-// --- Success ---
-
 func TestController_Success(t *testing.T) {
 	err := no_interface.Controller()
 	if err != nil {
@@ -15,10 +13,8 @@ func TestController_Success(t *testing.T) {
 	}
 }
 
-// --- Error ---
-
 // WARN: this won't pass!
-func TestController_Failure(t *testing.T) {
+func TestController_Error(t *testing.T) {
 	// we want this to error but we can't get it to
 	// because we can't easily stub the external.Client struct
 	err := no_interface.Controller()
