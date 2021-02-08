@@ -1,0 +1,35 @@
+package database
+
+import (
+	"github.com/bygui86/go-testing/db-example/logging"
+	"github.com/bygui86/go-testing/db-example/utils"
+)
+
+const (
+	dbHostEnvVar     = "DB_HOST"
+	dbPortEnvVar     = "DB_PORT"
+	dbUsernameEnvVar = "DB_USERNAME"
+	dbPasswordEnvVar = "DB_PASSWORD"
+	dbNameEnvVar     = "DB_NAME"
+	dbSslModeEnvVar  = "DB_SSL_MODE"
+
+	dbHostDefault     = "localhost"
+	dbPortDefault     = 5432
+	dbUsernameDefault = "username"
+	dbPasswordDefault = "password"
+	dbNameDefault     = "db"
+	dbSslModeDefault  = "disable"
+)
+
+func loadConfig() *config {
+	logging.Log.Debug("Load REST configurations")
+
+	return &config{
+		dbHost:     utils.GetStringEnv(dbHostEnvVar, dbHostDefault),
+		dbPort:     utils.GetIntEnv(dbPortEnvVar, dbPortDefault),
+		dbUsername: utils.GetStringEnv(dbUsernameEnvVar, dbUsernameDefault),
+		dbPassword: utils.GetStringEnv(dbPasswordEnvVar, dbPasswordDefault),
+		dbName:     utils.GetStringEnv(dbNameEnvVar, dbNameDefault),
+		dbSslMode:  utils.GetStringEnv(dbSslModeEnvVar, dbSslModeDefault),
+	}
+}
