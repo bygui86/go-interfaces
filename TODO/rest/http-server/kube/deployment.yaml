@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-server
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-server
+  template:
+    metadata:
+      labels:
+        app: http-server
+    spec:
+      terminationGracePeriodSeconds: 15
+      containers:
+        - name: http-server
+          image: bygui86/http-server:v1.0.0
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: http-server
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: metrics
+              containerPort: 9090
+            # - name: probes
+            #   containerPort: 9091
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          # livenessProbe:
+          #   httpGet:
+          #     path: /live
+          #     port: probes
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 5
+          #   timeoutSeconds: 3
+          #   successThreshold: 1
+          #   failureThreshold: 3
+          # readinessProbe:
+          #   httpGet:
+          #     path: /ready
+          #     port: probes
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 5
+          #   timeoutSeconds: 3
+          #   successThreshold: 1
+          #   failureThreshold: 3
