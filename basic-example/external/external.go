@@ -4,10 +4,10 @@ package external
 
 type Client struct{}
 
-func NewClient() Client {
-	return Client{}
+func NewClient() *Client {
+	return &Client{}
 }
 
-func (c Client) GetData() (string, error) {
+func (c *Client) GetData() (string, error) {
 	return "data", nil
 }

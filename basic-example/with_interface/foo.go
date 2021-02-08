@@ -13,9 +13,11 @@ func Controller(externalClient IExternalClient) error {
 	if err != nil {
 		return err
 	}
-	// do some things based on data from external API
+	
+	// do something ...
 	if fromExternalAPI != "data" {
 		return errors.New("unexpected data")
 	}
+	
 	return nil
 }

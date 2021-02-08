@@ -3,7 +3,7 @@ package no_interface
 import (
 	"errors"
 
-	"github.com/bygui86/go-interfaces/external"
+	"github.com/bygui86/go-testing/basic-example/external"
 )
 
 func Controller() error {

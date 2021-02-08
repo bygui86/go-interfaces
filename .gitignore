@@ -15,8 +15,6 @@ __MACOSX
 .DS_Store?
 .Spotlight-V100
 .Trashes
-### jenv
-.java-version
 
 ########### Windows
 Desktop.ini
@@ -53,7 +51,3 @@ Thumbs.db
 
 ########### Go coverage tool output
 *.out
-
-########### Project specific
-go-testing
-coverage.out
