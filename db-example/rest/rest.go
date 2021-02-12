@@ -27,10 +27,9 @@ func New(enableTracing bool) (*Server, error) {
 	}
 
 	pingErr := database.PingDb(db, 10)
-	if pingErr == nil {
-		logging.Log.Debug("DB ping success")
-	} else {
-		logging.SugaredLog.Errorf("DB ping failed: %s", pingErr.Error())
+	if pingErr != nil {
+		logging.SugaredLog.Errorf("PostgreSQL connection failed: %s", pingErr.Error())
+		panic(pingErr)
 	}
 
 	initErr := database.InitDb(db)
