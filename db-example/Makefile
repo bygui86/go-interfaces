@@ -16,9 +16,9 @@ start-postgres :		## Start PostgreSQL container
 	docker run -d --rm --name postgres \
 		-e POSTGRES_PASSWORD=supersecret \
 		-p 5432:5432 \
-		postgres
+		postgres:13.1-alpine
 
-stop-jaeger :		## Stop PostgreSQL container
+stop-postgres :		## Stop PostgreSQL container
 	docker container stop postgres
 
 
@@ -27,8 +27,17 @@ stop-jaeger :		## Stop PostgreSQL container
 build :		## Build application
 	go build
 
-test :		## Run application tests
-	go test -race -cover -coverprofile=coverage.out ./...
+test :		## Run all tests
+	go clean -testcache ./...
+	go test -v -count=1 -race -cover -coverprofile=coverage.out -tags=unit,integration ./...
+
+unit-test :		## Run unit tests only
+	go clean -testcache ./...
+	go test -v -count=1 -race -cover -coverprofile=coverage.out -tags=unit ./...
+
+integration-test :		## Run integration tests only
+	go clean -testcache ./...
+	go test -v -count=1 -race -cover -coverprofile=coverage.out -tags=integration ./...
 
 coverage-cli :		## Show coverage results in cli
 	go tool cover -func=coverage.out

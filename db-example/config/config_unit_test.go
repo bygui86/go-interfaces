@@ -1,3 +1,5 @@
+// +build unit !integration
+
 package config_test
 
 import (
@@ -25,14 +27,14 @@ const (
 
 func TestLoadConfig(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	monitorErr := os.Setenv(monitorKey, strconv.FormatBool(monitorValue))
-	require.Nil(t, monitorErr)
+	require.NoError(t, monitorErr)
 	traceErr := os.Setenv(traceKey, strconv.FormatBool(traceValue))
-	require.Nil(t, traceErr)
+	require.NoError(t, traceErr)
 	techErr := os.Setenv(techKey, techValue)
-	require.Nil(t, techErr)
+	require.NoError(t, techErr)
 
 	cfg := config.LoadConfig()
 
@@ -41,16 +43,16 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, techValue, cfg.GetTracingTech())
 
 	err := os.Unsetenv(monitorKey)
-	require.Nil(t, err)
+	require.NoError(t, err)
 	err = os.Unsetenv(traceKey)
-	require.Nil(t, err)
+	require.NoError(t, err)
 	err = os.Unsetenv(techKey)
-	require.Nil(t, err)
+	require.NoError(t, err)
 }
 
 func TestLoadConfig_Defaults(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	cfg := config.LoadConfig()
 
@@ -61,10 +63,10 @@ func TestLoadConfig_Defaults(t *testing.T) {
 
 func TestLoadConfig_TracingTechNotSupported(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	techErr := os.Setenv(techKey, "not-supported")
-	require.Nil(t, techErr)
+	require.NoError(t, techErr)
 
 	cfg := config.LoadConfig()
 
@@ -73,5 +75,5 @@ func TestLoadConfig_TracingTechNotSupported(t *testing.T) {
 	assert.Equal(t, config.TracingTechJaeger, cfg.GetTracingTech())
 
 	err := os.Unsetenv(techKey)
-	require.Nil(t, err)
+	require.NoError(t, err)
 }

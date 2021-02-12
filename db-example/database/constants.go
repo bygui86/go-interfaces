@@ -8,9 +8,10 @@ const (
 	CONSTRAINT products_pkey PRIMARY KEY (id)
 )`
 
-	getProductsQuery   = "SELECT id,name,price FROM products LIMIT $1 OFFSET $2"
-	getProductQuery    = "SELECT name,price FROM products WHERE id = $1"
-	createProductQuery = "INSERT INTO products(name, price) VALUES($1, $2) RETURNING id"
-	updateProductQuery = "UPDATE products SET name = $1, price = $2 WHERE id = $3"
-	deleteProductQuery = "DELETE FROM products WHERE id = $1"
+	getProductsQuery    = "SELECT id,name,price FROM products ORDER BY id ASC LIMIT $1 OFFSET $2"
+	getProductQuery     = "SELECT name,price FROM products WHERE id = $1"
+	createProductQuery  = "INSERT INTO products(name, price) VALUES($1, $2) RETURNING id"
+	updateProductQuery  = "UPDATE products SET name = $1, price = $2 WHERE id = $3"
+	deleteProductQuery  = "DELETE FROM products WHERE id = $1"
+	deleteProductsQuery = "DELETE FROM products"
 )

@@ -1,3 +1,5 @@
+// +build unit !integration
+
 package database
 
 import (
@@ -33,20 +35,20 @@ const (
 
 func TestLoadConfig(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	hostErr := os.Setenv(hostKey, hostValue)
-	require.Nil(t, hostErr)
+	require.NoError(t, hostErr)
 	portErr := os.Setenv(portKey, strconv.Itoa(portValue))
-	require.Nil(t, portErr)
+	require.NoError(t, portErr)
 	userErr := os.Setenv(userKey, userValue)
-	require.Nil(t, userErr)
+	require.NoError(t, userErr)
 	pwErr := os.Setenv(pwKey, pwValue)
-	require.Nil(t, pwErr)
+	require.NoError(t, pwErr)
 	nameErr := os.Setenv(nameKey, nameValue)
-	require.Nil(t, nameErr)
+	require.NoError(t, nameErr)
 	sslErr := os.Setenv(sslKey, sslValue)
-	require.Nil(t, sslErr)
+	require.NoError(t, sslErr)
 
 	cfg := loadConfig()
 
@@ -58,22 +60,22 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, sslValue, cfg.dbSslMode)
 
 	err := os.Unsetenv(hostKey)
-	require.Nil(t, err)
+	require.NoError(t, err)
 	err = os.Unsetenv(portKey)
-	require.Nil(t, err)
+	require.NoError(t, err)
 	err = os.Unsetenv(userKey)
-	require.Nil(t, err)
+	require.NoError(t, err)
 	err = os.Unsetenv(pwKey)
-	require.Nil(t, err)
+	require.NoError(t, err)
 	err = os.Unsetenv(nameKey)
-	require.Nil(t, err)
+	require.NoError(t, err)
 	err = os.Unsetenv(sslKey)
-	require.Nil(t, err)
+	require.NoError(t, err)
 }
 
 func TestLoadConfig_Defaults(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	cfg := loadConfig()
 

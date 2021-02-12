@@ -1,3 +1,5 @@
+// +build unit !integration
+
 package utils_test
 
 import (
@@ -27,14 +29,14 @@ const (
 
 func TestGetStringEnv_Success(t *testing.T) {
 	setErr := os.Setenv(stringKey, stringValue)
-	require.Nil(t, setErr)
+	require.NoError(t, setErr)
 
 	value := utils.GetStringEnv(stringKey, stringFallback)
 
 	assert.Equal(t, stringValue, value)
 
 	unsetErr := os.Unsetenv(stringKey)
-	require.Nil(t, unsetErr)
+	require.NoError(t, unsetErr)
 }
 
 func TestGetStringEnv_Fallback(t *testing.T) {
@@ -46,14 +48,14 @@ func TestGetStringEnv_Fallback(t *testing.T) {
 
 func TestGetIntEnv_Success(t *testing.T) {
 	setErr := os.Setenv(intKey, strconv.Itoa(intValue))
-	require.Nil(t, setErr)
+	require.NoError(t, setErr)
 
 	value := utils.GetIntEnv(intKey, intFallback)
 
 	assert.Equal(t, intValue, value)
 
 	unsetErr := os.Unsetenv(intKey)
-	require.Nil(t, unsetErr)
+	require.NoError(t, unsetErr)
 }
 
 func TestGetIntEnv_Fallback_NotSet(t *testing.T) {
@@ -65,7 +67,7 @@ func TestGetIntEnv_Fallback_NotSet(t *testing.T) {
 
 func TestGetIntEnv_Fallback_Format(t *testing.T) {
 	setErr := os.Setenv(intKey, "42s")
-	require.Nil(t, setErr)
+	require.NoError(t, setErr)
 
 	value := utils.GetIntEnv(intKey, intFallback)
 
@@ -73,19 +75,19 @@ func TestGetIntEnv_Fallback_Format(t *testing.T) {
 	assert.Equal(t, intFallback, value)
 
 	unsetErr := os.Unsetenv(intKey)
-	require.Nil(t, unsetErr)
+	require.NoError(t, unsetErr)
 }
 
 func TestGetBoolEnv_Success(t *testing.T) {
 	setErr := os.Setenv(boolKey, strconv.FormatBool(boolValue))
-	require.Nil(t, setErr)
+	require.NoError(t, setErr)
 
 	value := utils.GetBoolEnv(boolKey, boolFallback)
 
 	assert.Equal(t, boolValue, value)
 
 	unsetErr := os.Unsetenv(boolKey)
-	require.Nil(t, unsetErr)
+	require.NoError(t, unsetErr)
 }
 
 func TestGetBoolEnv_Fallback_NotSet(t *testing.T) {
@@ -97,7 +99,7 @@ func TestGetBoolEnv_Fallback_NotSet(t *testing.T) {
 
 func TestGetBoolEnv_Fallback_Format(t *testing.T) {
 	setErr := os.Setenv(boolKey, "unknown")
-	require.Nil(t, setErr)
+	require.NoError(t, setErr)
 
 	value := utils.GetBoolEnv(boolKey, boolFallback)
 
@@ -105,5 +107,5 @@ func TestGetBoolEnv_Fallback_Format(t *testing.T) {
 	assert.Equal(t, boolFallback, value)
 
 	unsetErr := os.Unsetenv(boolKey)
-	require.Nil(t, unsetErr)
+	require.NoError(t, unsetErr)
 }

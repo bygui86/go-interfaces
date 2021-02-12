@@ -26,6 +26,13 @@ func New(enableTracing bool) (*Server, error) {
 		return nil, dbErr
 	}
 
+	pingErr := database.PingDb(db, 10)
+	if pingErr == nil {
+		logging.Log.Debug("DB ping success")
+	} else {
+		logging.SugaredLog.Errorf("DB ping failed: %s", pingErr.Error())
+	}
+
 	initErr := database.InitDb(db)
 	if initErr != nil {
 		return nil, initErr

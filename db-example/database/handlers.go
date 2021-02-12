@@ -128,3 +128,21 @@ func DeleteProduct(db *sql.DB, productId int, ctx context.Context) error {
 	_, err := db.ExecContext(ctx, deleteProductQuery, productId)
 	return err
 }
+
+func DeleteProducts(db *sql.DB, ctx context.Context) error {
+	parentSpan := opentracing.SpanFromContext(ctx)
+	var parentCtx opentracing.SpanContext
+	if parentSpan != nil {
+		parentCtx = parentSpan.Context()
+	}
+	span := opentracing.StartSpan(
+		"delete-products-db",
+		opentracing.ChildOf(parentCtx),
+	)
+	defer span.Finish()
+
+	span.SetTag("query", deleteProductsQuery)
+
+	_, err := db.ExecContext(ctx, deleteProductsQuery)
+	return err
+}

@@ -1,3 +1,5 @@
+// +build unit !integration
+
 package database_test
 
 import (
@@ -12,9 +14,9 @@ import (
 	"github.com/bygui86/go-testing/db-example/logging"
 )
 
-func TestInitDb_Success(t *testing.T) {
+func TestInitDb_Unit_Success(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
@@ -28,9 +30,9 @@ func TestInitDb_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestInitDb_Fail(t *testing.T) {
+func TestInitDb_Unit_Fail(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()

@@ -7,6 +7,7 @@ import (
 
 	"github.com/ExpansiveWorlds/instrumentedsql"
 	instrumentedsqlopentracing "github.com/ExpansiveWorlds/instrumentedsql/opentracing"
+	"github.com/cenkalti/backoff"
 	"github.com/lib/pq"
 
 	"github.com/bygui86/go-testing/db-example/logging"
@@ -20,6 +21,8 @@ const (
 	// with tracing
 	dbConnectionString       = "postgres://%s:%s@%s:%d/%s?sslmode=%s"
 	instrumentedDbDriverName = "instrumeted-" + dbDriverName
+
+	defaultPingMaxRetry = 10
 )
 
 func New() (*sql.DB, error) {
@@ -27,30 +30,14 @@ func New() (*sql.DB, error) {
 
 	cfg := loadConfig()
 
-	db, dbErr := sql.Open(
-		dbDriverName,
-		fmt.Sprintf(dbConnectionStringFormat,
-			cfg.dbHost, cfg.dbPort,
-			cfg.dbUsername, cfg.dbPassword, cfg.dbName,
-			cfg.dbSslMode,
-		),
+	connString := fmt.Sprintf(dbConnectionStringFormat,
+		cfg.dbHost, cfg.dbPort,
+		cfg.dbUsername, cfg.dbPassword, cfg.dbName,
+		cfg.dbSslMode,
 	)
-	if dbErr != nil {
-		return nil, dbErr
-	}
+	logging.SugaredLog.Debugf("DB connection string: %s", connString)
 
-	return db, nil
-}
-
-func InitDb(db *sql.DB) error {
-	logging.Log.Info("Initialize DB")
-
-	result, tableErr := db.Exec(createTableQuery)
-	if tableErr != nil {
-		return tableErr
-	}
-	logging.SugaredLog.Debugf("Initializion result: %s", result)
-	return nil
+	return sql.Open(dbDriverName, connString)
 }
 
 func NewWithWrappedTracing() (*sql.DB, error) {
@@ -59,11 +46,14 @@ func NewWithWrappedTracing() (*sql.DB, error) {
 	cfg := loadConfig()
 
 	// Get a database driver.Connector for a fixed configuration.
-	connector, connErr := pq.NewConnector(fmt.Sprintf(dbConnectionString,
+	connString := fmt.Sprintf(dbConnectionString,
 		cfg.dbUsername, cfg.dbPassword,
 		cfg.dbHost, cfg.dbPort,
 		cfg.dbName, cfg.dbSslMode,
-	))
+	)
+	logging.SugaredLog.Debugf("DB connection string: %s", connString)
+
+	connector, connErr := pq.NewConnector(connString)
 	if connErr != nil {
 		return nil, connErr
 	}
@@ -79,22 +69,39 @@ func NewWithWrappedTracing() (*sql.DB, error) {
 				})),
 		),
 	)
-	db, dbErr := sql.Open(
-		instrumentedDbDriverName,
-		fmt.Sprintf(dbConnectionStringFormat,
-			cfg.dbHost, cfg.dbPort,
-			cfg.dbUsername, cfg.dbPassword, cfg.dbName,
-			cfg.dbSslMode,
-		),
-	)
-	if dbErr != nil {
-		return nil, dbErr
-	}
 
-	_, tableErr := db.Exec(createTableQuery)
+	return sql.OpenDB(connector), nil
+}
+
+func InitDb(db *sql.DB) error {
+	logging.Log.Info("Initialize DB")
+
+	result, tableErr := db.Exec(createTableQuery)
 	if tableErr != nil {
-		return nil, tableErr
+		return tableErr
+	}
+	logging.SugaredLog.Debugf("Initializion result: %s", result)
+	return nil
+}
+
+func PingDb(db *sql.DB, maxRetry uint64) error {
+	if maxRetry <= 0 {
+		logging.SugaredLog.Warnf("PingDB maxRetry value not valid, falling back to default (%d)", defaultPingMaxRetry)
+		maxRetry = defaultPingMaxRetry
 	}
 
-	return db, nil
+	// WARN: connection takes a bit time to be opened, golang application is so fast that the first ping could easily fail
+	pingErr := backoff.Retry(
+		func() error {
+			err := db.Ping()
+			if err != nil {
+				logging.Log.Info("PostgreSQL connection not ready, backing off...")
+				return err
+			}
+			logging.Log.Info("PostgreSQL connection ready")
+			return nil
+		},
+		backoff.WithMaxRetries(backoff.NewExponentialBackOff(), maxRetry),
+	)
+	return pingErr
 }

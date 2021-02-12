@@ -1,3 +1,5 @@
+// +build unit !integration
+
 package database_test
 
 import (
@@ -13,16 +15,16 @@ import (
 	"github.com/bygui86/go-testing/db-example/logging"
 )
 
-func TestGetProducts_Success(t *testing.T) {
+func TestGetProducts_Unit_Success(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
 
 	rows := sqlmock.NewRows([]string{"id", "name", "price"}).
 		AddRow(productId, productName, productPrice).
-		AddRow(productId_2, productName_2, productPrice_2)
+		AddRow(productId2, productName2, productPrice2)
 
 	mock.ExpectQuery(getProductsQuery).
 		WillReturnRows(rows)
@@ -35,14 +37,14 @@ func TestGetProducts_Success(t *testing.T) {
 	assert.Equal(t, productId, products[0].ID)
 	assert.Equal(t, productName, products[0].Name)
 	assert.Equal(t, productPrice, products[0].Price)
-	assert.Equal(t, productId_2, products[1].ID)
-	assert.Equal(t, productName_2, products[1].Name)
-	assert.Equal(t, productPrice_2, products[1].Price)
+	assert.Equal(t, productId2, products[1].ID)
+	assert.Equal(t, productName2, products[1].Name)
+	assert.Equal(t, productPrice2, products[1].Price)
 }
 
-func TestGetProducts_Fail_Query(t *testing.T) {
+func TestGetProducts_Unit_Fail_Query(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
@@ -57,16 +59,16 @@ func TestGetProducts_Fail_Query(t *testing.T) {
 }
 
 // see https://github.com/DATA-DOG/go-sqlmock/issues/47
-func TestGetProducts_Fail_Scan(t *testing.T) {
+func TestGetProducts_Unit_Fail_Scan(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
 
 	rows := sqlmock.NewRows([]string{"id", "name", "price"}).
 		AddRow(productId, productName, productPrice).
-		AddRow(productId_2, productName_2, productPrice_2).
+		AddRow(productId2, productName2, productPrice2).
 		AddRow(nil, "sample-3", 44.44).RowError(3, fmt.Errorf("row-error"))
 
 	mock.ExpectQuery(getProductsQuery).
@@ -78,9 +80,9 @@ func TestGetProducts_Fail_Scan(t *testing.T) {
 	assert.Equal(t, 0, len(products))
 }
 
-func TestGetProduct_Success(t *testing.T) {
+func TestGetProduct_Unit_Success(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
@@ -101,9 +103,9 @@ func TestGetProduct_Success(t *testing.T) {
 	assert.Equal(t, productPrice, product.Price)
 }
 
-func TestGetProduct_Fail(t *testing.T) {
+func TestGetProduct_Unit_Fail(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
@@ -121,9 +123,9 @@ func TestGetProduct_Fail(t *testing.T) {
 	assert.Equal(t, 0.0, product.Price)
 }
 
-func TestCreateProduct_Success(t *testing.T) {
+func TestCreateProduct_Unit_Success(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
@@ -145,9 +147,9 @@ func TestCreateProduct_Success(t *testing.T) {
 	assert.Equal(t, productPrice, product.Price)
 }
 
-func TestCreateProduct_Fail(t *testing.T) {
+func TestCreateProduct_Unit_Fail(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
@@ -163,9 +165,9 @@ func TestCreateProduct_Fail(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestUpdateProduct_Success(t *testing.T) {
+func TestUpdateProduct_Unit_Success(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
@@ -181,9 +183,9 @@ func TestUpdateProduct_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestUpdateProduct_Fail(t *testing.T) {
+func TestUpdateProduct_Unit_Fail(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
@@ -199,9 +201,9 @@ func TestUpdateProduct_Fail(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestDeleteProduct_Success(t *testing.T) {
+func TestDeleteProduct_Unit_Success(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
@@ -216,9 +218,9 @@ func TestDeleteProduct_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestDeleteProduct_Fail(t *testing.T) {
+func TestDeleteProduct_Unit_Fail(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
-	require.Nil(t, logErr)
+	require.NoError(t, logErr)
 
 	db, mock := NewRegexpMock(t)
 	defer db.Close()
@@ -229,6 +231,39 @@ func TestDeleteProduct_Fail(t *testing.T) {
 	mock.ExpectRollback()
 
 	err := database.DeleteProduct(db, productId, context.Background())
+
+	assert.Error(t, err)
+}
+
+func TestDeleteProducts_Unit_Success(t *testing.T) {
+	logErr := logging.InitGlobalLogger()
+	require.NoError(t, logErr)
+
+	db, mock := NewRegexpMock(t)
+	defer db.Close()
+
+	mock.ExpectExec(deleteProductQuery).
+		WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectCommit()
+
+	err := database.DeleteProducts(db, context.Background())
+
+	assert.NoError(t, err)
+}
+
+func TestDeleteProducts_Unit_Fail(t *testing.T) {
+	logErr := logging.InitGlobalLogger()
+	require.NoError(t, logErr)
+
+	db, mock := NewRegexpMock(t)
+	defer db.Close()
+
+	mock.ExpectExec(deleteProductQuery).
+		WithArgs(productId).
+		WillReturnError(fmt.Errorf("error"))
+	mock.ExpectRollback()
+
+	err := database.DeleteProducts(db, context.Background())
 
 	assert.Error(t, err)
 }
