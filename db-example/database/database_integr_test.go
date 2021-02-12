@@ -1,6 +1,6 @@
 // +build integration
 
-package integration_tests
+package database
 
 import (
 	"os"
@@ -12,7 +12,6 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/bygui86/go-testing/db-example/database"
 	"github.com/bygui86/go-testing/db-example/logging"
 )
 
@@ -24,7 +23,7 @@ func TestNew_Integr_Success(t *testing.T) {
 	logging.SugaredLog.Debugf("DB_NAME: %s", os.Getenv("DB_NAME"))
 	logging.SugaredLog.Debugf("DB_SSL_MODE: %s", os.Getenv("DB_SSL_MODE"))
 
-	db, dbErr := database.New()
+	db, dbErr := New()
 	assert.NoError(t, dbErr)
 
 	logging.SugaredLog.Debugf("[pre-ping] DB conn open: %d", db.Stats().OpenConnections)
@@ -50,7 +49,7 @@ func TestNewWithWrappedTracing_Integr_Success(t *testing.T) {
 	logging.SugaredLog.Debugf("DB_NAME: %s", os.Getenv("DB_NAME"))
 	logging.SugaredLog.Debugf("DB_SSL_MODE: %s", os.Getenv("DB_SSL_MODE"))
 
-	db, dbErr := database.NewWithWrappedTracing()
+	db, dbErr := NewWithWrappedTracing()
 	assert.NoError(t, dbErr)
 
 	logging.SugaredLog.Debugf("[pre-ping] DB conn open: %d", db.Stats().OpenConnections)
@@ -69,13 +68,13 @@ func TestNewWithWrappedTracing_Integr_Success(t *testing.T) {
 }
 
 func TestInitDb_Integr_Success(t *testing.T) {
-	db, dbErr := database.New()
+	db, dbErr := New()
 	require.NoError(t, dbErr)
 
 	pingErr := ping(db)
 	require.NoError(t, pingErr)
 
-	initErr := database.InitDb(db)
+	initErr := InitDb(db)
 	assert.NoError(t, initErr)
 
 	_, tableErr := db.Exec("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'products'")
