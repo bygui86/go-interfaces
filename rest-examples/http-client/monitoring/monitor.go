@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/bygui86/go-traces/http-client/logging"
+	"github.com/bygui86/go-testing/rest-examples/http-client/logging"
 )
 
 func NewServer() *Server {

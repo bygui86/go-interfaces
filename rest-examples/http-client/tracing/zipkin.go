@@ -9,7 +9,7 @@ import (
 	"github.com/openzipkin/zipkin-go/reporter"
 	zipkinhttpreporter "github.com/openzipkin/zipkin-go/reporter/http"
 
-	"github.com/bygui86/go-traces/http-client/logging"
+	"github.com/bygui86/go-testing/rest-examples/http-client/logging"
 )
 
 const (

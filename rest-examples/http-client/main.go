@@ -9,12 +9,12 @@ import (
 
 	"github.com/openzipkin/zipkin-go/reporter"
 
-	"github.com/bygui86/go-traces/http-client/commons"
-	"github.com/bygui86/go-traces/http-client/config"
-	"github.com/bygui86/go-traces/http-client/logging"
-	"github.com/bygui86/go-traces/http-client/monitoring"
-	"github.com/bygui86/go-traces/http-client/rest"
-	"github.com/bygui86/go-traces/http-client/tracing"
+	"github.com/bygui86/go-testing/rest-examples/http-client/commons"
+	"github.com/bygui86/go-testing/rest-examples/http-client/config"
+	"github.com/bygui86/go-testing/rest-examples/http-client/logging"
+	"github.com/bygui86/go-testing/rest-examples/http-client/monitoring"
+	"github.com/bygui86/go-testing/rest-examples/http-client/rest"
+	"github.com/bygui86/go-testing/rest-examples/http-client/tracing"
 )
 
 const (
@@ -105,7 +105,17 @@ func initZipkinTracer() reporter.Reporter {
 func startRestServer() *rest.Server {
 	logging.Log.Debug("Start REST server")
 
-	server, newErr := rest.New()
+	cfg := rest.LoadConfig()
+
+	baseUrl, urlErr := rest.CreateBaseUrl(cfg.RestServerHost, cfg.RestServerPort)
+	if urlErr != nil {
+		logging.SugaredLog.Errorf("REST server URL creation failed: %s", urlErr.Error())
+		os.Exit(501)
+	}
+
+	client := rest.CreateRestClient()
+
+	server, newErr := rest.New(cfg, baseUrl, client)
 	if newErr != nil {
 		logging.SugaredLog.Errorf("REST server creation failed: %s", newErr.Error())
 		os.Exit(501)

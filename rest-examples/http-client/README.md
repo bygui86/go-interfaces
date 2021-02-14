@@ -1,5 +1,5 @@
 
-# Go traces - HTTP client
+# Go testing - HTTP client
 
 ## Endpoints
 

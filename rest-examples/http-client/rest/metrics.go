@@ -28,31 +28,6 @@ var (
 		},
 		[]string{"method"},
 	)
-
-	// customSummary = prometheus.NewSummaryVec(
-	// 	prometheus.SummaryOpts{
-	// 		Namespace:   "",
-	// 		Subsystem:   "",
-	// 		Name:        "",
-	// 		Help:        "",
-	// 		ConstLabels: nil,
-	// 		Objectives:  nil,
-	// 		MaxAge:      0,
-	// 		AgeBuckets:  0,
-	// 		BufCap:      0,
-	// 	},
-	// 	[]string{"method"},
-	// )
-
-	// customGague = prometheus.NewGaugeVec(
-	// 	prometheus.GaugeOpts{
-	// 		Namespace: "",
-	// 		Subsystem: "",
-	// 		Name:      "",
-	// 		Help:      "",
-	// 	},
-	// 	[]string{"method"},
-	// )
 )
 
 func RegisterCustomMetrics() {

@@ -11,13 +11,13 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/opentracing/opentracing-go"
 
-	"github.com/bygui86/go-traces/http-client/commons"
-	"github.com/bygui86/go-traces/http-client/logging"
+	"github.com/bygui86/go-testing/rest-examples/http-client/commons"
+	"github.com/bygui86/go-testing/rest-examples/http-client/logging"
 )
 
 // TODO reduce code duplication
 
-func (s *Server) getProducts(writer http.ResponseWriter, request *http.Request) {
+func (s *Server) GetProducts(writer http.ResponseWriter, request *http.Request) {
 	span := opentracing.StartSpan("get-products-handler")
 	defer span.Finish()
 
@@ -90,7 +90,7 @@ func (s *Server) getProducts(writer http.ResponseWriter, request *http.Request) 
 	ObserveRestRequestsTime("getProducts", float64(time.Now().Sub(startTimer).Milliseconds()))
 }
 
-func (s *Server) getProduct(writer http.ResponseWriter, request *http.Request) {
+func (s *Server) GetProduct(writer http.ResponseWriter, request *http.Request) {
 	span := opentracing.StartSpan("get-product-handler")
 	defer span.Finish()
 
@@ -174,7 +174,7 @@ func (s *Server) getProduct(writer http.ResponseWriter, request *http.Request) {
 	ObserveRestRequestsTime("getProduct", float64(time.Now().Sub(startTimer).Milliseconds()))
 }
 
-func (s *Server) createProduct(writer http.ResponseWriter, request *http.Request) {
+func (s *Server) CreateProduct(writer http.ResponseWriter, request *http.Request) {
 	span := opentracing.StartSpan("create-product-handler")
 	defer span.Finish()
 
@@ -263,7 +263,7 @@ func (s *Server) createProduct(writer http.ResponseWriter, request *http.Request
 	ObserveRestRequestsTime("createProduct", float64(time.Now().Sub(startTimer).Milliseconds()))
 }
 
-func (s *Server) updateProduct(writer http.ResponseWriter, request *http.Request) {
+func (s *Server) UpdateProduct(writer http.ResponseWriter, request *http.Request) {
 	span := opentracing.StartSpan("update-product-handler")
 	defer span.Finish()
 
@@ -364,7 +364,7 @@ func (s *Server) updateProduct(writer http.ResponseWriter, request *http.Request
 	ObserveRestRequestsTime("updateProduct", float64(time.Now().Sub(startTimer).Milliseconds()))
 }
 
-func (s *Server) deleteProduct(writer http.ResponseWriter, request *http.Request) {
+func (s *Server) DeleteProduct(writer http.ResponseWriter, request *http.Request) {
 	span := opentracing.StartSpan("delete-product-handler")
 	defer span.Finish()
 

@@ -7,8 +7,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/bygui86/go-traces/http-client/commons"
-	"github.com/bygui86/go-traces/http-client/logging"
+	"github.com/bygui86/go-testing/rest-examples/http-client/commons"
+	"github.com/bygui86/go-testing/rest-examples/http-client/logging"
 )
 
 func (s *Server) newRouter() {

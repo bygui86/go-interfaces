@@ -3,7 +3,7 @@ package rest
 import (
 	"net/http"
 
-	"github.com/bygui86/go-traces/http-client/logging"
+	"github.com/bygui86/go-testing/rest-examples/http-client/logging"
 )
 
 func requestInfoPrintingMiddleware(next http.Handler) http.Handler {

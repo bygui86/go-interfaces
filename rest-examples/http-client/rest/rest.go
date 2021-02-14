@@ -3,24 +3,21 @@ package rest
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"time"
 
-	"github.com/bygui86/go-traces/http-client/logging"
+	"github.com/bygui86/go-testing/rest-examples/http-client/logging"
 )
 
-func New() (*Server, error) {
+func New(cfg *Config, url *url.URL, restClient HTTPClient) (*Server, error) {
 	logging.Log.Info("Create new REST server")
 
-	cfg := loadConfig()
-
 	server := &Server{
-		config: cfg,
+		config:     cfg,
+		baseURL:    url,
+		restClient: restClient,
 	}
 
-	err := server.setupRestClient()
-	if err != nil {
-		return nil, err
-	}
 	server.setupRouter()
 	server.setupHTTPServer()
 	return server, nil
@@ -41,7 +38,7 @@ func (s *Server) Start() error {
 			return err
 		}
 		s.running = true
-		logging.SugaredLog.Infof("REST server listening on port %d", s.config.restPort)
+		logging.SugaredLog.Infof("REST server listening on port %d", s.config.RestPort)
 		return nil
 	}
 

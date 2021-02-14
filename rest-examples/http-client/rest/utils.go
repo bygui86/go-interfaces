@@ -4,15 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/gorilla/mux"
 
-	"github.com/bygui86/go-traces/http-client/commons"
-	"github.com/bygui86/go-traces/http-client/logging"
+	"github.com/bygui86/go-testing/rest-examples/http-client/commons"
+	"github.com/bygui86/go-testing/rest-examples/http-client/logging"
 )
 
 const (
@@ -34,22 +33,6 @@ const (
 
 // SERVER
 
-func (s *Server) setupRestClient() error {
-	logging.Log.Debug("Setup base URL")
-
-	var urlErr error
-	s.baseURL, urlErr = url.Parse(fmt.Sprintf("http://%s:%d", s.config.restServerHost, s.config.restServerPort))
-	if urlErr != nil {
-		return urlErr
-	}
-
-	s.restClient = &http.Client{
-		Timeout: 3 * time.Second,
-	}
-
-	return nil
-}
-
 func (s *Server) setupRouter() {
 	logging.Log.Debug("Create new router")
 
@@ -57,19 +40,19 @@ func (s *Server) setupRouter() {
 
 	s.router.Use(requestInfoPrintingMiddleware)
 
-	s.router.HandleFunc(rootProductsEndpoint, s.getProducts).Methods(http.MethodGet)
-	s.router.HandleFunc(productsIdEndpoint, s.getProduct).Methods(http.MethodGet)
-	s.router.HandleFunc(rootProductsEndpoint, s.createProduct).Methods(http.MethodPost)
-	s.router.HandleFunc(productsIdEndpoint, s.updateProduct).Methods(http.MethodPut)
-	s.router.HandleFunc(productsIdEndpoint, s.deleteProduct).Methods(http.MethodDelete)
+	s.router.HandleFunc(rootProductsEndpoint, s.GetProducts).Methods(http.MethodGet)
+	s.router.HandleFunc(productsIdEndpoint, s.GetProduct).Methods(http.MethodGet)
+	s.router.HandleFunc(rootProductsEndpoint, s.CreateProduct).Methods(http.MethodPost)
+	s.router.HandleFunc(productsIdEndpoint, s.UpdateProduct).Methods(http.MethodPut)
+	s.router.HandleFunc(productsIdEndpoint, s.DeleteProduct).Methods(http.MethodDelete)
 }
 
 func (s *Server) setupHTTPServer() {
-	logging.SugaredLog.Debugf("Create new HTTP server on port %d", s.config.restPort)
+	logging.SugaredLog.Debugf("Create new HTTP server on port %d", s.config.RestPort)
 
 	if s.config != nil {
 		s.httpServer = &http.Server{
-			Addr:    fmt.Sprintf(commons.HttpServerHostFormat, s.config.restHost, s.config.restPort),
+			Addr:    fmt.Sprintf(commons.HttpServerHostFormat, s.config.RestHost, s.config.RestPort),
 			Handler: s.router,
 			// Good practice to set timeouts to avoid Slowloris attacks.
 			WriteTimeout: commons.HttpServerWriteTimeoutDefault,
@@ -107,33 +90,19 @@ func closeBody(body io.ReadCloser) {
 
 // OTHERS
 
-func (s *Server) setRequestHeaders(restRequest *http.Request) {
-	restRequest.Header.Set(headerAccept, headerApplicationJson)
-	restRequest.Header.Set(headerUserAgent, headerUserAgentClient)
-	ip, ipErr := getPublicIp()
-	if ipErr != nil {
-		logging.SugaredLog.Errorf("Get public IP address failed: %s", ipErr.Error())
-	} else {
-		restRequest.Header.Set(headerCustomSource, ip)
+func CreateBaseUrl(host string, port int) (*url.URL, error) {
+	return url.Parse(fmt.Sprintf("http://%s:%d", host, port))
+}
+
+func CreateRestClient() *http.Client {
+	logging.Log.Debug("Create new HTTP client")
+
+	return &http.Client{
+		Timeout: 3 * time.Second,
 	}
 }
 
-func getPublicIp() (string, error) {
-	url := "https://api.ipify.org?format=text"
-	logging.SugaredLog.Infof("Get public IP address from %s", url)
-
-	response, respErr := http.Get(url)
-	if respErr != nil {
-		return "", respErr
-	}
-	defer closeBody(response.Body)
-
-	ip, bodyErr := ioutil.ReadAll(response.Body)
-	if bodyErr != nil {
-		return "", bodyErr
-	}
-
-	logging.SugaredLog.Infof("Public IP '%s' will be added as 'Custom-Source' header", ip)
-
-	return string(ip), nil
+func (s *Server) setRequestHeaders(restRequest *http.Request) {
+	restRequest.Header.Set(headerAccept, headerApplicationJson)
+	restRequest.Header.Set(headerUserAgent, headerUserAgentClient)
 }
