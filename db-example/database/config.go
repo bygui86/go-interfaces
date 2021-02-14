@@ -21,7 +21,7 @@ const (
 	dbSslModeDefault  = "disable"
 )
 
-func loadConfig() *config {
+func LoadConfig() *config {
 	logging.Log.Debug("Load REST configurations")
 
 	return &config{

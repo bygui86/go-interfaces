@@ -1,5 +1,5 @@
 
-# Go traces - HTTP server DB
+# Go testing - HTTP server DB
 
 `/!\ WARN` Requires PostgreSQL database
 

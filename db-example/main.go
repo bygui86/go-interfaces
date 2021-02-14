@@ -36,12 +36,12 @@ func main() {
 
 	cfg := loadConfig()
 
-	if cfg.GetEnableMonitoring() {
+	if cfg.EnableMonitoring() {
 		monitoringServer = startMonitoringServer()
 	}
 
-	if cfg.GetEnableTracing() {
-		switch cfg.GetTracingTech() {
+	if cfg.EnableTracing() {
+		switch cfg.TracingTech() {
 		case config.TracingTechJaeger:
 			jaegerCloser = initJaegerTracer()
 		case config.TracingTechZipkin:

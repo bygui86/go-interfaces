@@ -1,6 +1,6 @@
 // +build unit !integration
 
-package database
+package database_test
 
 import (
 	"os"
@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/bygui86/go-testing/db-example/database"
 	"github.com/bygui86/go-testing/db-example/logging"
 )
 
@@ -50,14 +51,14 @@ func TestLoadConfig(t *testing.T) {
 	sslErr := os.Setenv(sslKey, sslValue)
 	require.NoError(t, sslErr)
 
-	cfg := loadConfig()
+	cfg := database.LoadConfig()
 
-	assert.Equal(t, hostValue, cfg.dbHost)
-	assert.Equal(t, portValue, cfg.dbPort)
-	assert.Equal(t, userValue, cfg.dbUsername)
-	assert.Equal(t, pwValue, cfg.dbPassword)
-	assert.Equal(t, nameValue, cfg.dbName)
-	assert.Equal(t, sslValue, cfg.dbSslMode)
+	assert.Equal(t, hostValue, cfg.DbHost())
+	assert.Equal(t, portValue, cfg.DbPort())
+	assert.Equal(t, userValue, cfg.DbUsername())
+	assert.Equal(t, pwValue, cfg.DbPassword())
+	assert.Equal(t, nameValue, cfg.DbName())
+	assert.Equal(t, sslValue, cfg.DbSslMode())
 
 	err := os.Unsetenv(hostKey)
 	require.NoError(t, err)
@@ -77,12 +78,12 @@ func TestLoadConfig_Defaults(t *testing.T) {
 	logErr := logging.InitGlobalLogger()
 	require.NoError(t, logErr)
 
-	cfg := loadConfig()
+	cfg := database.LoadConfig()
 
-	assert.Equal(t, dbHostDefault, cfg.dbHost)
-	assert.Equal(t, dbPortDefault, cfg.dbPort)
-	assert.Equal(t, dbUsernameDefault, cfg.dbUsername)
-	assert.Equal(t, dbPasswordDefault, cfg.dbPassword)
-	assert.Equal(t, dbNameDefault, cfg.dbName)
-	assert.Equal(t, dbSslModeDefault, cfg.dbSslMode)
+	assert.Equal(t, database.DbHostDefault(), cfg.DbHost())
+	assert.Equal(t, database.DbPortDefault(), cfg.DbPort())
+	assert.Equal(t, database.DbUsernameDefault(), cfg.DbUsername())
+	assert.Equal(t, database.DbPasswordDefault(), cfg.DbPassword())
+	assert.Equal(t, database.DbNameDefault(), cfg.DbName())
+	assert.Equal(t, database.DbSslModeDefault(), cfg.DbSslMode())
 }

@@ -15,13 +15,6 @@ const (
 	createProductQuery = "INSERT INTO products"
 	updateProductQuery = "UPDATE products"
 	deleteProductQuery = "DELETE FROM products"
-
-	productId     = 42
-	productName   = "sample"
-	productPrice  = 42.42
-	productId2    = 43
-	productName2  = "sample-2"
-	productPrice2 = 43.43
 )
 
 /*

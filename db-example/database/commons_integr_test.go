@@ -1,4 +1,4 @@
-package database
+package database_test
 
 import (
 	"context"
@@ -12,6 +12,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 
+	"github.com/bygui86/go-testing/db-example/database"
 	"github.com/bygui86/go-testing/db-example/logging"
 )
 
@@ -140,13 +141,13 @@ func stopPostgres(postgres testcontainers.Container, ctx context.Context) {
 }
 
 func initConnAndTable(t *testing.T) *sql.DB {
-	db, dbErr := New()
+	db, dbErr := database.New()
 	require.NoError(t, dbErr)
 
 	pingErr := ping(db)
 	require.NoError(t, pingErr)
 
-	initErr := InitDb(db)
+	initErr := database.InitDb(db)
 	require.NoError(t, initErr)
 	return db
 }

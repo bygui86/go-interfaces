@@ -38,9 +38,9 @@ func TestLoadConfig(t *testing.T) {
 
 	cfg := config.LoadConfig()
 
-	assert.Equal(t, monitorValue, cfg.GetEnableMonitoring())
-	assert.Equal(t, traceValue, cfg.GetEnableTracing())
-	assert.Equal(t, techValue, cfg.GetTracingTech())
+	assert.Equal(t, monitorValue, cfg.EnableMonitoring())
+	assert.Equal(t, traceValue, cfg.EnableTracing())
+	assert.Equal(t, techValue, cfg.TracingTech())
 
 	err := os.Unsetenv(monitorKey)
 	require.NoError(t, err)
@@ -56,9 +56,9 @@ func TestLoadConfig_Defaults(t *testing.T) {
 
 	cfg := config.LoadConfig()
 
-	assert.Equal(t, true, cfg.GetEnableMonitoring())
-	assert.Equal(t, true, cfg.GetEnableTracing())
-	assert.Equal(t, config.TracingTechJaeger, cfg.GetTracingTech())
+	assert.Equal(t, true, cfg.EnableMonitoring())
+	assert.Equal(t, true, cfg.EnableTracing())
+	assert.Equal(t, config.TracingTechJaeger, cfg.TracingTech())
 }
 
 func TestLoadConfig_TracingTechNotSupported(t *testing.T) {
@@ -70,9 +70,9 @@ func TestLoadConfig_TracingTechNotSupported(t *testing.T) {
 
 	cfg := config.LoadConfig()
 
-	assert.Equal(t, true, cfg.GetEnableMonitoring())
-	assert.Equal(t, true, cfg.GetEnableTracing())
-	assert.Equal(t, config.TracingTechJaeger, cfg.GetTracingTech())
+	assert.Equal(t, true, cfg.EnableMonitoring())
+	assert.Equal(t, true, cfg.EnableTracing())
+	assert.Equal(t, config.TracingTechJaeger, cfg.TracingTech())
 
 	err := os.Unsetenv(techKey)
 	require.NoError(t, err)

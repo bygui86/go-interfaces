@@ -1,13 +1,13 @@
 package config
 
-func (c *Config) GetEnableMonitoring() bool {
+func (c *Config) EnableMonitoring() bool {
 	return c.enableMonitoring
 }
 
-func (c *Config) GetEnableTracing() bool {
+func (c *Config) EnableTracing() bool {
 	return c.enableTracing
 }
 
-func (c *Config) GetTracingTech() string {
+func (c *Config) TracingTech() string {
 	return c.tracingTech
 }

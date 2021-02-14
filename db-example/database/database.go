@@ -28,7 +28,7 @@ const (
 func New() (*sql.DB, error) {
 	logging.Log.Info("Create new DB connector")
 
-	cfg := loadConfig()
+	cfg := LoadConfig()
 
 	connString := fmt.Sprintf(dbConnectionStringFormat,
 		cfg.dbHost, cfg.dbPort,
@@ -43,7 +43,7 @@ func New() (*sql.DB, error) {
 func NewWithWrappedTracing() (*sql.DB, error) {
 	logging.Log.Info("Create new DB connector with tracing")
 
-	cfg := loadConfig()
+	cfg := LoadConfig()
 
 	// Get a database driver.Connector for a fixed configuration.
 	connString := fmt.Sprintf(dbConnectionString,
